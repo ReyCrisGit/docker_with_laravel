@@ -6,3 +6,5 @@ ENV MYSQL_DATABASE=db \
     MYSQL_PASSWORD=Admin123
 
 VOLUME [ "/var/lib/mysql" ]
+
+CMD ["mysqld"] 
