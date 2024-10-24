@@ -1,10 +1,5 @@
-FROM mysql:latest
-
-ENV MYSQL_DATABASE=db \
-    MYSQL_USER=Admin \
-    MYSQL_ROOT_PASSWORD=Admin123 \
-    MYSQL_PASSWORD=Admin123
-
-VOLUME [ "/var/lib/mysql" ]
-
-CMD ["mysqld"] 
+FROM php:8.2-apache
+RUN a2enmod rewrite
+COPY index.php /var/www/html/
+EXPOSE 80
+CMD ["apache2-foreground"] 
