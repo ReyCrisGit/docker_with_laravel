@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  basededatos:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    image: mysql_image
+    environment:
+      MYSQL_DATABASE: db
+      MYSQL_USER: Admin
+      MYSQL_ROOT_PASSWORD: Admin123
+      MYSQL_PASSWORD: Admin123
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - red-laradock
+
+volumes:
+  db_data
+
+networks:
+  red-laradock
