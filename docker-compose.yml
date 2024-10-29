@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  laravel-service:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: laravel-service-cont
+    volumes:
+      - ./web:/var/www/html # Sincroniza el código de Laravel en la carpeta web
+    ports:
+      - "8080:80" # Acceso al servicio Laravel desde el puerto 8080
+    environment:
+      - APP_ENV=local
+      - DB_HOST=mysql-service
+      - DB_DATABASE=db
+      - DB_USERNAME=Admin
+      - DB_PASSWORD=Admin123
+    networks:
+      - red-laradock
+
+  mysql-service:
+    image: mysql:8.0
+    container_name: mysql-service-cont
+    environment:
+      MYSQL_ROOT_PASSWORD: Admin123
+      MYSQL_DATABASE: db
+      MYSQL_USER: Admin
+      MYSQL_PASSWORD: Admin123
+    volumes:
+      - db_data:/var/lib/mysql # Persistencia de datos en MySQL
+    ports:
+      - "3306:3306" # Puerto de acceso a MySQL desde el host
+    networks:
+      - red-laradock
+
+volumes:
+  db_data: # Volumen para almacenar datos de MySQL
+
+networks:
+  red-laradock: # Red de contenedores personalizada para permitir la comunicación
