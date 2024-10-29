@@ -7,9 +7,9 @@ services:
       dockerfile: Dockerfile
     container_name: laravel-service-cont
     volumes:
-      - ./web:/var/www/html # Sincroniza el código de Laravel en la carpeta web
+      - ./web:/var/www/html
     ports:
-      - "8080:80" # Acceso al servicio Laravel desde el puerto 8080
+      - "8080:80"
     environment:
       - APP_ENV=local
       - DB_HOST=mysql-service
@@ -28,14 +28,14 @@ services:
       MYSQL_USER: Admin
       MYSQL_PASSWORD: Admin123
     volumes:
-      - db_data:/var/lib/mysql # Persistencia de datos en MySQL
+      - db_data:/var/lib/mysql
     ports:
-      - "3306:3306" # Puerto de acceso a MySQL desde el host
+      - "3306:3306"
     networks:
       - red-laradock
 
 volumes:
-  db_data: # Volumen para almacenar datos de MySQL
+  db_data:
 
 networks:
-  red-laradock: # Red de contenedores personalizada para permitir la comunicación
+red-laradock:

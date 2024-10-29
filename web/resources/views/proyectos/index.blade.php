@@ -10,12 +10,9 @@
 
 <body class="bg-gray-100 text-gray-800">
     <div class="container mx-auto p-8">
-        <!-- Logo -->
         <div class="flex justify-center mb-8">
             <img src="{{ asset('img/logo.png') }}" alt="Logo del blog" class="w-1/4">
         </div>
-
-        <!-- Descripción del Blog -->
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-indigo-700">EL BLOG DE INGENIEROS</h1>
             <p class="text-lg text-indigo-500 font-semibold">TRANSFORMANDO IDEAS EN REALIDAD</p>
@@ -24,15 +21,11 @@
                 <strong>Cristian</strong>.
             </p>
         </div>
-
-        <!-- Botón para Crear Proyecto -->
         <div class="text-center mb-8">
             <button onclick="openModal()"
                 class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Crear Nuevo
                 Proyecto</button>
         </div>
-
-        <!-- Modal -->
         <div id="modal" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center hidden">
             <div class="bg-white p-6 rounded-lg w-1/2">
                 <h2 id="modal-title" class="text-xl font-bold mb-4">Nuevo Proyecto</h2>
@@ -64,8 +57,6 @@
                 </form>
             </div>
         </div>
-
-        <!-- Lista de Proyectos -->
         <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($proyectos as $proyecto)
                 <div class="bg-white p-4 rounded-lg shadow">
@@ -92,8 +83,6 @@
             @endforeach
         </div>
     </div>
-
-    <!-- Script para abrir, cerrar y gestionar el modal -->
     <script>
         function openModal() {
             document.getElementById('modal-form').reset();
