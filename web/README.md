@@ -1,66 +1,117 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Dockerización de una Aplicación Laravel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Contexto
+Este proyecto, desarrollado como parte del curso de "Actualización II", tiene como objetivo dockerizar una aplicación Laravel para crear un entorno de desarrollo estandarizado y replicable. Utilizando Docker y Docker Compose, configuramos contenedores para PHP 8.2 con Apache y MySQL 8.2, permitiendo a los desarrolladores trabajar en un ambiente similar al de producción. La configuración incluye volúmenes para la persistencia de datos y la edición en tiempo real desde el host, facilitando el flujo de trabajo y la colaboración en equipo.
 
-## About Laravel
+Este proyecto fue realizado por el equipo **"El Blog de los Ingenieros"** y documenta paso a paso la configuración de Dockerfiles, volúmenes, redes y otras configuraciones necesarias para implementar un entorno de desarrollo eficiente para Laravel.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Instrucciones para Hacer Funcionar la Aplicación
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Requisitos Previos
+Antes de iniciar, asegúrate de tener instalados en tu sistema:
+- **Docker** (versión 20.10.0 o superior)
+- **Docker Compose** (versión 1.27.0 o superior)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Estructura del Proyecto
+La estructura básica del proyecto es la siguiente:
+```
+docker_with_laravel/
+├── db/
+│   └── Dockerfile         # Dockerfile para el contenedor MySQL
+├── web/
+│   ├── Dockerfile         # Dockerfile para el contenedor PHP con Apache
+│   ├── .env               # Archivo de configuración de variables de entorno para Laravel
+│   ├── 000-default.conf   # Configuración de Apache para redirigir a Laravel
+│   └── public/
+│       └── .htaccess      # Configuración para manejar redirecciones en Laravel
+├── docker-compose.yml     # Archivo de configuración para Docker Compose
+└── README.md              # Instrucciones del proyecto
+```
 
-## Learning Laravel
+### Paso 1: Clonar el Repositorio
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Clona el repositorio en tu máquina local:
+```bash
+git clone https://github.com/ReyCrisGit/docker_with_laravel.git
+cd docker_with_laravel
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Paso 2: Configurar las Variables de Entorno
+Dentro de la carpeta `web/`, asegúrate de tener el archivo `.env` configurado correctamente. Este archivo define las variables de entorno para conectar Laravel con la base de datos MySQL en Docker. Puedes utilizar el siguiente contenido como ejemplo:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```dotenv
+APP_NAME="EL BLOG DE LOS INGENIEROS"
+APP_ENV=local
+APP_KEY=base64:65CilasP5AMD2I8wh6kFiy82X7+qVxUa8/5extdPupc=
+APP_DEBUG=true
+APP_URL=http://localhost:8080
 
-## Laravel Sponsors
+DB_CONNECTION=mysql
+DB_HOST=mysql-service
+DB_PORT=3306
+DB_DATABASE=blog-db
+DB_USERNAME=Admin
+DB_PASSWORD=Admin123
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Paso 3: Crear y Configurar los Contenedores
+Asegúrate de estar en el directorio raíz del proyecto (`docker_with_laravel`). Luego, ejecuta el siguiente comando para construir y lanzar los contenedores:
 
-### Premium Partners
+```bash
+docker-compose up --build
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Este comando realizará las siguientes acciones:
+- **Construirá los contenedores**: PHP con Apache y MySQL, utilizando los Dockerfiles en `web/` y `db/`.
+- **Creará una red** (`blog-red`) para permitir la comunicación entre los contenedores.
+- **Montará los volúmenes** para la persistencia de datos en MySQL y la edición del código Laravel desde el host.
 
-## Contributing
+> Nota: La primera vez que se ejecute este comando, puede demorar algunos minutos, ya que Docker descargará las imágenes necesarias.
+> Nota: Si no te funciona, ejecuta composer update para actualizar la carpeta vendor del proyecto de Laravel.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Paso 4: Verificar el Estado de la Aplicación
 
-## Code of Conduct
+Cuando los contenedores estén en ejecución, abre tu navegador y visita la siguiente URL:
+```
+http://localhost:8080/
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Si todo está configurado correctamente, deberías ver la página de inicio de la aplicación Laravel.
 
-## Security Vulnerabilities
+### Paso 5: Comandos Útiles para Manejo de Contenedores
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Detener los contenedores**:
+  ```bash
+  docker-compose down
+  ```
 
-## License
+- **Ver los logs de los contenedores**:
+  ```bash
+  docker-compose logs
+  ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **Reiniciar los contenedores** (por ejemplo, después de hacer cambios en los Dockerfiles):
+  ```bash
+  docker-compose up --build
+  ```
+
+### Paso 6: Ejecución de Migraciones y Seeder
+
+Para configurar la base de datos con tablas y datos de prueba, ejecuta los siguientes comandos:
+
+```bash
+docker-compose exec laravel-service php artisan migrate --seed
+```
+
+### Solución de Problemas
+
+- **Error de Conexión a MySQL**: Verifica que las variables de conexión en `.env` coincidan con las del archivo `docker-compose.yml` y que el contenedor `mysql-service` esté en ejecución.
+- **Cambios en el Código no Reflejados**: Asegúrate de que el volumen `./web:/var/www/html` esté correctamente configurado en `docker-compose.yml`.
+- **Permisos de Archivos**: Si encuentras problemas de permisos, puedes ejecutar el siguiente comando para asignar los permisos necesarios en el contenedor:
+  ```bash
+  docker-compose exec laravel-service chown -R www-data:www-data /var/www/html
+  ```
+
+### Contribuciones y Control de Versiones
+
+Para colaborar en el proyecto, cada miembro del equipo trabajó en una rama específica (e.g., `main`, `dev`, `barrios`, `ariel`). Esto permitió que los cambios individuales se integraran en la rama principal de forma organizada y con menos conflictos.
