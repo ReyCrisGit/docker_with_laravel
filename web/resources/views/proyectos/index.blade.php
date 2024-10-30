@@ -10,6 +10,7 @@
 
 <body class="bg-gray-100 text-gray-800">
     <div class="container mx-auto p-8">
+        <!-- Logo e introducción -->
         <div class="flex justify-center mb-8">
             <img src="{{ asset('img/logo.png') }}" alt="Logo del blog" class="w-1/4">
         </div>
@@ -21,17 +22,23 @@
                 <strong>Cristian</strong>.
             </p>
         </div>
+
+        <!-- Botón para crear nuevo proyecto -->
         <div class="text-center mb-8">
             <button onclick="openModal()"
-                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Crear Nuevo
-                Proyecto</button>
+                class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition">
+                Crear Nuevo Proyecto
+            </button>
         </div>
+
+        <!-- Modal para crear/editar proyecto -->
         <div id="modal" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center hidden">
             <div class="bg-white p-6 rounded-lg w-1/2">
                 <h2 id="modal-title" class="text-xl font-bold mb-4">Nuevo Proyecto</h2>
                 <form id="modal-form" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" id="project-id" name="id">
+                    <input type="hidden" name="_method" value="PUT" id="form-method">
                     <div class="mb-4">
                         <label for="nombre" class="block text-gray-700">Nombre:</label>
                         <input type="text" name="nombre" id="nombre" class="w-full border-gray-300 rounded"
@@ -52,11 +59,13 @@
                     <div class="flex justify-end">
                         <button type="button" onclick="closeModal()"
                             class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancelar</button>
-                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Guardar</button>
+                        <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded">Guardar</button>
                     </div>
                 </form>
             </div>
         </div>
+
+        <!-- Listado de proyectos -->
         <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($proyectos as $proyecto)
                 <div class="bg-white p-4 rounded-lg shadow">
@@ -83,11 +92,14 @@
             @endforeach
         </div>
     </div>
+
+    <!-- Scripts -->
     <script>
         function openModal() {
             document.getElementById('modal-form').reset();
             document.getElementById('project-id').value = '';
             document.getElementById('modal-form').action = "{{ route('proyectos.store') }}";
+            document.getElementById('form-method').value = ''; // Limpia el método PUT para crear
             document.getElementById('modal-title').innerText = 'Nuevo Proyecto';
             document.getElementById('modal').classList.remove('hidden');
         }
@@ -102,6 +114,7 @@
             document.getElementById('descripcion').value = descripcion;
             document.getElementById('enlace').value = enlace;
             document.getElementById('modal-form').action = `/proyectos/${id}`;
+            document.getElementById('form-method').value = 'PUT'; // Cambia a PUT para editar
             document.getElementById('modal-title').innerText = 'Editar Proyecto';
             document.getElementById('modal').classList.remove('hidden');
         }

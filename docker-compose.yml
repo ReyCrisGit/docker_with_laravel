@@ -13,29 +13,26 @@ services:
     environment:
       - APP_ENV=local
       - DB_HOST=mysql-service
-      - DB_DATABASE=db
+      - DB_DATABASE=blog-db
       - DB_USERNAME=Admin
       - DB_PASSWORD=Admin123
     networks:
-      - red-laradock
-
+      - blog-red
+    depends_on:
+      - mysql-service
   mysql-service:
-    image: mysql:8.0
+    build: 
+      context: ./db
+      dockerfile: Dockerfile
     container_name: mysql-service-cont
-    environment:
-      MYSQL_ROOT_PASSWORD: Admin123
-      MYSQL_DATABASE: db
-      MYSQL_USER: Admin
-      MYSQL_PASSWORD: Admin123
     volumes:
       - db_data:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - "3307:3306"
     networks:
-      - red-laradock
-
+      - blog-red
+    
 volumes:
   db_data:
-
 networks:
-  red-laradock:
+  blog-red:

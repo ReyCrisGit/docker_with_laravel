@@ -15,7 +15,7 @@ class ProyectoController extends Controller
     public function index()
     {
         $proyectos = Proyecto::all();
-        return view('proyectos.index', ['proyectos' => $proyectos]);
+        return view('proyectos.index', compact('proyectos'));
     }
 
     /**
@@ -57,10 +57,10 @@ class ProyectoController extends Controller
             }
 
             DB::commit();
-            return redirect()->action([ProyectoController::class, 'index']);
+            return redirect('/');
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->action([ProyectoController::class, 'index']);
+            return redirect('/');
         }
     }
 
@@ -115,10 +115,10 @@ class ProyectoController extends Controller
             }
 
             DB::commit();
-            return redirect()->action([ProyectoController::class, 'index']);
+            return redirect('/');
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->action([ProyectoController::class, 'index']);
+            return redirect('/');
         }
     }
 
@@ -134,10 +134,10 @@ class ProyectoController extends Controller
             $proyecto->delete();
 
             DB::commit();
-            return redirect()->action([ProyectoController::class, 'index']);
+            return redirect('/');
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->action([ProyectoController::class, 'index']);
+            return redirect('/');
         }
     }
 }
